@@ -1,0 +1,17 @@
+{
+  "name": "workbench-api-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "implicitDependencies": ["workbench-api"],
+  "targets": {
+    "e2e": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{e2eProjectRoot}"],
+      "options": {
+        "jestConfig": "apps/workbench-api-e2e/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "dependsOn": ["workbench-api:build", "workbench-api:serve"]
+    }
+  }
+}

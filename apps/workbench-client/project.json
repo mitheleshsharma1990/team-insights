@@ -57,7 +57,11 @@
           "buildTarget": "workbench-client:build:development"
         }
       },
-      "defaultConfiguration": "development"
+      "defaultConfiguration": "development",
+      "dependsOn": ["workbench-api:serve"],
+      "options": {
+        "proxyConfig": "apps/workbench-client/proxy.conf.json"
+      }
     },
     "extract-i18n": {
       "executor": "@angular/build:extract-i18n",

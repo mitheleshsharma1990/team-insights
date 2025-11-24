@@ -14,7 +14,14 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@team-insights/feature-login": ["libs/auth/feature-login/src/index.ts"],
+      "@team-insights/feature-overview": [
+        "libs/dashboard/feature-overview/src/index.ts"
+      ],
+      "@team-insights/user-data-access": ["libs/users/data-access/src/index.ts"],
+      "@team-insights/user-data-access/effects": ["libs/users/data-access/src/lib/users.effects.ts"],
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

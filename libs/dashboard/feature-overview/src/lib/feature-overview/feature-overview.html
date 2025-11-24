@@ -1,0 +1,34 @@
+<div class="dashboard-layout" style="display: flex;height: 100vh;">
+  <aside style="width: 200px; background: #eee; padding: 20px;">
+    <h2>Workbench</h2>
+    <ul style="list-style: none; padding: 0;">
+      <li>Users</li>
+    </ul>
+    <button (click)="logout()">Logout</button>
+  </aside>
+
+  <main style="flex:1; padding: 20px;">
+    <h1>Team Overview</h1>
+
+    <div *ngIf="loading$ | async">Loading users...</div>
+    <table border="1" cellpadding="15" cellspacing="0" *ngIf="(users$ | async) as users">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>{{ user.id }}</td>
+          <td>{{ user.name }}</td>
+          <td>{{ user.email }}</td>
+        </tr>
+      </tbody>
+
+    </table>
+
+    <p>This is a protected dashboard.</p>
+  </main>
+</div>

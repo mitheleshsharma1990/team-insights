@@ -1,0 +1,13 @@
+
+
+.chart-container {
+  width: 100%;
+  display: block;
+  text {
+    font-family: 'Arial, sans-serif';
+    font-size: 12px;
+  }
+  path,line {
+    stroke:#ccc;
+  }
+}

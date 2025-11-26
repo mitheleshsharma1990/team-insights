@@ -23,4 +23,5 @@ model Task {
   title     String
   userId    String?
   user      User?     @relation(fields: [userId], references: [id])
+  priority  String    @default("Low")    
 }

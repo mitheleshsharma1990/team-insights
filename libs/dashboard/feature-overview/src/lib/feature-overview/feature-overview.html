@@ -1,34 +1,92 @@
-<div class="dashboard-layout" style="display: flex;height: 100vh;">
-  <aside style="width: 200px; background: #eee; padding: 20px;">
-    <h2>Workbench</h2>
-    <ul style="list-style: none; padding: 0;">
-      <li>Users</li>
+<div class="min-h-screen flex bg-gray-100">
+
+  <!-- Sidebar -->
+  <aside class="w-64 bg-white shadow-lg p-6 flex flex-col gap-6">
+    <h2 class="text-2xl font-semibold text-blue-600">Workbench</h2>
+
+    <ul class="space-y-3 text-gray-700">
+      <li class="cursor-pointer hover:text-blue-600">Users</li>
     </ul>
-    <button (click)="logout()">Logout</button>
+
+    <button 
+      (click)="logout()"
+      class="mt-auto px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+    >
+      Logout
+    </button>
   </aside>
 
-  <main style="flex:1; padding: 20px;">
-    <h1>Team Overview</h1>
+  <!-- Main Content -->
+  <main class="flex-1 p-10 space-y-10">
 
-    <div *ngIf="loading$ | async">Loading users...</div>
-    <table border="1" cellpadding="15" cellspacing="0" *ngIf="(users$ | async) as users">
-      <thead>
+    <h1 class="text-3xl font-bold text-gray-800">Team Overview</h1>
+
+    <!-- Loading -->
+    <div *ngIf="loading$ | async" class="text-gray-600">
+      Loading users...
+    </div>
+
+    <!-- Users Table -->
+    <table 
+      class="w-full border-collapse bg-white shadow-md rounded-lg overflow-hidden"
+      *ngIf="(users$ | async) as users"
+    >
+      <thead class="bg-gray-200">
         <tr>
-          <th>ID</th>
-          <th>Name</th>
-          <th>Email</th>
+          <th class="px-4 py-2 text-left font-medium">ID</th>
+          <th class="px-4 py-2 text-left font-medium">Name</th>
+          <th class="px-4 py-2 text-left font-medium">Email</th>
         </tr>
       </thead>
+
       <tbody>
-        <tr *ngFor="let user of users">
-          <td>{{ user.id }}</td>
-          <td>{{ user.name }}</td>
-          <td>{{ user.email }}</td>
+        <tr 
+          *ngFor="let user of users"
+          class="border-b hover:bg-gray-50"
+        >
+          <td class="px-4 py-2">{{ user.role }}</td>
+          <td class="px-4 py-2">{{ user.email }}</td>
         </tr>
       </tbody>
-
     </table>
 
-    <p>This is a protected dashboard.</p>
+    <hr />
+
+    <!-- Task List -->
+    <div>
+      <h2 class="text-2xl font-semibold mb-3">Task List</h2>
+
+      <ul class="space-y-2">
+        <li *ngFor="let t of task" class="bg-white p-3 rounded-md shadow">
+          {{ t.title }} - {{ t.priority }} -
+          <span [ngClass]="t.isUrgent ? 'text-red-600 font-semibold' : 'text-green-600'">
+            {{ t.isUrgent ? 'Urgent' : 'Not Urgent' }}
+          </span>
+        </li>
+      </ul>
+    </div>
+
+    <hr />
+
+    <!-- Create Task Form -->
+    <div class="bg-white p-6 rounded-lg shadow">
+      <h2 class="text-xl font-semibold mb-4">Create New Task</h2>
+
+      <lib-dynamic-form
+        [config]="taskFormConfig"
+        (submitForm)="handleTaskSubmit($event)"
+      >
+      </lib-dynamic-form>
+    </div>
+
+    <hr />
+
+    <!-- Charts -->
+    <div class="bg-white p-6 rounded-lg shadow">
+      <lib-ui-charts [data]="chartData"></lib-ui-charts>
+    </div>
+
+    <p class="text-gray-500">This is a protected dashboard.</p>
+
   </main>
 </div>

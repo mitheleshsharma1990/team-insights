@@ -1,1 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Roboto", sans-serif;
+  --color-primary: #3b82f6;
+}
+
+html, body { height: 100%; margin: 0;}

@@ -1,0 +1,45 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="dynamic-form">
+  <div>
+    <div *ngFor="let field of config" class="form-field">
+      <label [for]="field.name">{{ field.label }}</label>
+
+      <input
+        *ngIf="field.type === 'text'"
+        [type]="field.type"
+        [formControlName]="field.name"
+        [id]="field.name"
+        [required]="field.required ?? false"
+      />
+
+      <select
+        *ngIf="field.type === 'select'"
+        [formControlName]="field.name"
+        [id]="field.name"
+        [required]="field.required ?? false"
+      >
+        <option *ngFor="let option of field.options" [value]="option">
+          {{ option }}
+        </option>
+      </select>
+
+      <input
+        *ngIf="field.type === 'checkbox'"
+        type="checkbox"
+        [formControlName]="field.name"
+        [id]="field.name"
+      />
+
+      <div
+        class="error"
+        *ngIf="
+          form.get(field.name)?.invalid && form.get(field.name)?.touched
+        "
+      >
+        This field is required.
+      </div>
+    </div>
+
+    <button type="submit" [disabled]="form.invalid">Submit</button>
+  </div>
+
+</form>

@@ -4,10 +4,10 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/dto/users.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/dto/auth.module';
-import { EventsGateway } from './events/events.gateway';
+import { TasksModule } from './tasks/tasks.module';
 @Module({
-  imports: [UsersModule, PrismaModule, AuthModule],
+  imports: [UsersModule, PrismaModule, AuthModule, TasksModule],
   controllers: [AppController],
-  providers: [AppService, EventsGateway],
+  providers: [AppService],
 })
 export class AppModule {}

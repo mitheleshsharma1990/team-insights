@@ -19,8 +19,15 @@
       "@team-insights/feature-overview": [
         "libs/dashboard/feature-overview/src/index.ts"
       ],
-      "@team-insights/user-data-access": ["libs/users/data-access/src/index.ts"],
-      "@team-insights/user-data-access/effects": ["libs/users/data-access/src/lib/users.effects.ts"],
+      "@team-insights/user-data-access": [
+        "libs/users/data-access/src/index.ts"
+      ],
+      "@team-insights/user-data-access/effects": [
+        "libs/users/data-access/src/lib/users.effects.ts"
+      ],
+      "@team-insights/data-access": ["libs/shared/ui/data-access/src/index.ts"],
+      "@team-insights/dynamic-form": ["libs/dynamic-forms/src/index.ts"],
+      "@team-insights/ui-charts": ["libs/dashboard/ui-charts/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

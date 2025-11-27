@@ -66,7 +66,7 @@ export const usersFeature = createFeature({
     on(UsersActions.createUserFailure, (state, { error }) => ({
       ...state,
       loading: false,
-      error: null,
+      error,
     }))
   ),
 });

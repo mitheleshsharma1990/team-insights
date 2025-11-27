@@ -24,6 +24,7 @@ export class FeatureOverview {
   private auth = inject(AuthService);
 
   @ViewChild(DynamicForm) dynamicForm!: DynamicForm;
+  @ViewChild('barChart') barChart!: UiCharts;
 
   task: any[] = [];
   showAddUserForm = false;
@@ -52,6 +53,12 @@ export class FeatureOverview {
   ];
 
   addUserFormConfig: FormFieldConfig[] = [
+    {
+      type: 'text',
+      name: 'name',
+      label: 'Full Name',
+      required: true,
+    },
     {
       type: 'text',
       name: 'email',
@@ -88,11 +95,14 @@ export class FeatureOverview {
         counts[p]++;
       }
     });
+    console.log('counts', counts);
+
     this.chartData = [
       { labels: 'High', values: counts['High'] },
       { labels: 'Medium', values: counts['Medium'] },
       { labels: 'Low', values: counts['Low'] },
     ];
+    this.barChart.updateChart();
   }
 
   handleTaskSubmit(formData: any) {
@@ -119,6 +129,7 @@ export class FeatureOverview {
     this.store.dispatch(UsersActions.enterDashboard());
     this.http.get<any[]>('api/tasks').subscribe((data) => {
       this.task = data;
+      this.updateChart();
     });
 
     this.socketService.onTaskCreated().subscribe((newTask) => {

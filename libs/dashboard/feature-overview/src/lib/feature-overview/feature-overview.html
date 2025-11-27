@@ -3,11 +3,6 @@
   <!-- Sidebar -->
   <aside class="w-64 bg-white shadow-lg p-6 flex flex-col gap-6">
     <h2 class="text-2xl font-semibold text-blue-600">Workbench</h2>
-
-    <ul class="space-y-3 text-gray-700">
-      <li class="cursor-pointer hover:text-blue-600">Users</li>
-    </ul>
-
     <div class="flex items-center gap-3 p-3 rounded-lg bg-gray-800 shadow mb-6">
     <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
       {{ currentUser?.name?.charAt(0)}}
@@ -29,7 +24,7 @@
 
     <button 
       (click)="logout()"
-      class="mt-auto px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+      class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
     >
       Logout
     </button>
@@ -101,7 +96,7 @@
 
     <!-- Charts -->
     <div class="bg-white p-6 rounded-lg shadow">
-      <lib-ui-charts [data]="chartData"></lib-ui-charts>
+      <lib-ui-charts #barChart [data]="chartData"></lib-ui-charts>
     </div>
 
     <p class="text-gray-500">This is a protected dashboard.</p>
@@ -124,7 +119,7 @@
 
     <lib-dynamic-form
       [config]="addUserFormConfig"
-      (formSubmit)="handleAddUserSubmit($event)"
+      (submitForm)="handleAddUserSubmit($event)"
     >
     </lib-dynamic-form>
   </div>

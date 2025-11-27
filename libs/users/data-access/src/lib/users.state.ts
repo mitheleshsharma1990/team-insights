@@ -6,7 +6,7 @@ import {
   props,
   on,
 } from '@ngrx/store';
-import { User } from './users-api.service';
+import { User, CreateUserRequest } from '@team-insights/util-interfaces';
 
 interface UserState {
   users: User[];
@@ -26,6 +26,10 @@ export const UsersActions = createActionGroup({
     'Enter dashboard': emptyProps(),
     'Load users success': props<{ users: User[] }>(),
     'Load users failure': props<{ error: any }>(),
+
+    'Create User': props<{ user: CreateUserRequest }>(),
+    'Create User Success': props<{ user: User }>(),
+    'Create User Failure': props<{ error: any }>(),
   },
 });
 
@@ -48,6 +52,21 @@ export const usersFeature = createFeature({
       ...state,
       loading: false,
       error,
+    })),
+    on(UsersActions.createUser, (state) => ({
+      ...state,
+      loading: true,
+      error: null,
+    })),
+    on(UsersActions.createUserSuccess, (state, { user }) => ({
+      ...state,
+      loading: false,
+      users: [...state.users, user],
+    })),
+    on(UsersActions.createUserFailure, (state, { error }) => ({
+      ...state,
+      loading: false,
+      error: null,
     }))
   ),
 });

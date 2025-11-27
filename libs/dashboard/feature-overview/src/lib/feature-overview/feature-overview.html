@@ -8,6 +8,25 @@
       <li class="cursor-pointer hover:text-blue-600">Users</li>
     </ul>
 
+    <div class="flex items-center gap-3 p-3 rounded-lg bg-gray-800 shadow mb-6">
+    <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
+      {{ currentUser?.name?.charAt(0)}}
+    </div>
+    <div>
+      <div class="font-semibold text-white">{{ currentUser?.name }}</div>
+      <div class="text-gray-400 text-sm">{{ currentUser?.role }}</div>
+    </div>
+    </div>
+
+    <button
+      (click)="toggleAddUser()"
+      [disabled]="currentUser?.role === 'ENGINEER'"
+      [class.opacity-50]="currentUser?.role === 'ENGINEER'"
+      [class.cursor-not-allowed]="currentUser?.role === 'ENGINEER'"
+      class="mt-4 w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors">
+      + Add Team Mate
+    </button>
+
     <button 
       (click)="logout()"
       class="mt-auto px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
@@ -33,8 +52,7 @@
     >
       <thead class="bg-gray-200">
         <tr>
-          <th class="px-4 py-2 text-left font-medium">ID</th>
-          <th class="px-4 py-2 text-left font-medium">Name</th>
+          <th class="px-4 py-2 text-left font-medium">Role</th>
           <th class="px-4 py-2 text-left font-medium">Email</th>
         </tr>
       </thead>
@@ -89,4 +107,28 @@
     <p class="text-gray-500">This is a protected dashboard.</p>
 
   </main>
+  <div 
+  *ngIf="showAddUserForm" 
+  class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+  >
+  <div class="bg-white p-6 rounded-xl shadow-lg w-96">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-xl font-semibold">Add New Team Mate</h2>
+      <button 
+        (click)="toggleAddUser()" 
+        class="text-gray-500 hover:text-gray-800 transition-colors"
+      >
+        ✕
+      </button>
+    </div>
+
+    <lib-dynamic-form
+      [config]="addUserFormConfig"
+      (formSubmit)="handleAddUserSubmit($event)"
+    >
+    </lib-dynamic-form>
+  </div>
+</div>
+
+
 </div>

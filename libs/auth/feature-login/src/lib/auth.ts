@@ -1,13 +1,32 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs';
+import { jwtDecode } from 'jwt-decode';
+export interface TokenPayload {
+  sub: string;
+  email: string;
+  name: string;
+  role: 'ADMIN' | 'MANAGER' | 'ENGINEER';
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  http = inject(HttpClient);
+  private http = inject(HttpClient);
 
+  currentUser = signal<TokenPayload | null>(this.getUserFromStorage());
+  getUserFromStorage(): TokenPayload | null {
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        return jwtDecode<TokenPayload>(token);
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  }
   login(email: string, password: string) {
     return this.http
       .post<{ access_token: string }>('/api/auth/login', { email, password })
@@ -15,6 +34,8 @@ export class AuthService {
         tap((response) => {
           const token = response.access_token;
           localStorage.setItem('token', token);
+          const decoded = jwtDecode<TokenPayload>(token);
+          this.currentUser.set(decoded);
           console.log('Login successful, token stored.', token);
         })
       );

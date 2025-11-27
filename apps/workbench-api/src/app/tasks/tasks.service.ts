@@ -14,6 +14,7 @@ export class TasksService {
     const task = await this.prisma.task.create({
       data: {
         title: createTaskDto.title,
+        priority: createTaskDto.priority,
       },
     });
     this.eventsGateway.notifyTaskCreated(task);

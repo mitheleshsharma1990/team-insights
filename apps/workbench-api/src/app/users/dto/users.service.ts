@@ -14,6 +14,8 @@ export class UsersService {
       data: {
         email: CreateUserDto.email,
         password: hashedPassword,
+        role: CreateUserDto.role,
+        name: CreateUserDto.name,
       },
     });
   }
@@ -27,6 +29,7 @@ export class UsersService {
         id: true,
         email: true,
         role: true,
+        name: true,
         createdAt: true,
       },
     });

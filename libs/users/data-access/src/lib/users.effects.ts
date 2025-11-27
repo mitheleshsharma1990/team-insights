@@ -18,3 +18,22 @@ export const usersEffects = createEffect(
   },
   { functional: true }
 );
+
+export const createUser = createEffect(
+  (actions$ = inject(Actions), usersApiService = inject(UsersApiService)) => {
+    return actions$.pipe(
+      ofType(UsersActions.createUser),
+      switchMap(({ user }) =>
+        usersApiService.createUser(user).pipe(
+          map((createdUser) =>
+            UsersActions.createUserSuccess({ user: createdUser })
+          ),
+          catchError((error) =>
+            of(UsersActions.createUserFailure({ error: error }))
+          )
+        )
+      )
+    );
+  },
+  { functional: true }
+);

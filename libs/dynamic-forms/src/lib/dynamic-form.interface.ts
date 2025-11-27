@@ -1,5 +1,5 @@
 export interface FormFieldConfig {
-  type: 'text' | 'number' | 'select' | 'checkbox';
+  type: 'text' | 'number' | 'select' | 'checkbox' | 'password';
   name: string;
   label?: string;
   value?: any;

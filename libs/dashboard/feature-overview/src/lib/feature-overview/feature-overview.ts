@@ -1,10 +1,4 @@
-import {
-  Component,
-  inject,
-  ChangeDetectorRef,
-  ViewChild,
-  CUSTOM_ELEMENTS_SCHEMA,
-} from '@angular/core';
+import { Component, inject, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -13,13 +7,13 @@ import { SocketService } from '@team-insights/data-access';
 import { HttpClient } from '@angular/common/http';
 import { DynamicForm, FormFieldConfig } from '@team-insights/dynamic-form';
 import { UiCharts, ChartData } from '@team-insights/ui-charts';
+import { AuthService } from '@team-insights/feature-login';
 @Component({
   selector: 'lib-feature-overview',
   standalone: true,
   imports: [CommonModule, DynamicForm, UiCharts],
   templateUrl: './feature-overview.html',
   styleUrl: './feature-overview.css',
-  // schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class FeatureOverview {
   private router = inject(Router);
@@ -27,10 +21,13 @@ export class FeatureOverview {
   private socketService = inject(SocketService);
   private cdr = inject(ChangeDetectorRef);
   private http = inject(HttpClient);
+  private auth = inject(AuthService);
 
   @ViewChild(DynamicForm) dynamicForm!: DynamicForm;
 
   task: any[] = [];
+  showAddUserForm = false;
+  currentUser = this.auth.currentUser();
   taskFormConfig: FormFieldConfig[] = [
     {
       type: 'text',
@@ -53,6 +50,33 @@ export class FeatureOverview {
       required: false,
     },
   ];
+
+  addUserFormConfig: FormFieldConfig[] = [
+    {
+      type: 'text',
+      name: 'email',
+      label: 'Email Address',
+      required: true,
+    },
+    {
+      type: 'password',
+      name: 'password',
+      label: 'Temporary Password',
+      required: true,
+    },
+    {
+      type: 'select',
+      name: 'role',
+      label: 'Role',
+      options: ['ADMIN', 'MANAGER', 'ENGINEER'],
+      required: true,
+      value: 'ENGINEER',
+    },
+  ];
+
+  toggleAddUser() {
+    this.showAddUserForm = !this.showAddUserForm;
+  }
 
   chartData: ChartData[] = [];
 
@@ -80,6 +104,12 @@ export class FeatureOverview {
       this.cdr.detectChanges();
       this.dynamicForm.resetForm();
     });
+  }
+
+  handleAddUserSubmit(formData: any) {
+    this.store.dispatch(UsersActions.createUser({ user: formData }));
+    this.showAddUserForm = false;
+    alert('User creation started');
   }
 
   users$ = this.store.select(usersFeature.selectUsers);

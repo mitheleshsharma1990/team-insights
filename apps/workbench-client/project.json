@@ -20,7 +20,12 @@
             "input": "apps/workbench-client/public"
           }
         ],
-        "styles": ["apps/workbench-client/src/styles.css"]
+        "styles": ["apps/workbench-client/src/styles.css"],
+        "server": "apps/workbench-client/src/main.server.ts",
+        "ssr": {
+          "entry": "apps/workbench-client/src/server.ts"
+        },
+        "outputMode": "server"
       },
       "configurations": {
         "production": {

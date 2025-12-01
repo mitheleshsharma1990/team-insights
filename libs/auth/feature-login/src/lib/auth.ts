@@ -1,7 +1,9 @@
-import { inject, Injectable, signal, computed } from '@angular/core';
+import { inject, Injectable, signal, PLATFORM_ID } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
+import { isPlatformBrowser } from '@angular/common';
+
 export interface TokenPayload {
   sub: string;
   email: string;
@@ -14,15 +16,19 @@ export interface TokenPayload {
 })
 export class AuthService {
   private http = inject(HttpClient);
+  private platformId = inject(PLATFORM_ID);
 
   currentUser = signal<TokenPayload | null>(this.getUserFromStorage());
+
   getUserFromStorage(): TokenPayload | null {
-    const token = localStorage.getItem('token');
-    if (token) {
-      try {
-        return jwtDecode<TokenPayload>(token);
-      } catch {
-        return null;
+    if (isPlatformBrowser(this.platformId)) {
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          return jwtDecode<TokenPayload>(token);
+        } catch {
+          return null;
+        }
       }
     }
     return null;

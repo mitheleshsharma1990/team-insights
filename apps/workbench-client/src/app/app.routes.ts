@@ -6,8 +6,9 @@ import { provideState } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 
 import { usersFeature } from '@team-insights/user-data-access';
-import * as usersEffects from '@team-insights/user-data-access/effects';
-
+import * as effects from '@team-insights/user-data-access/effects';
+import { tasksFeature } from '@team-insights/tasks-data-access';
+import * as taskEffects from '@team-insights/tasks-data-access/effects';
 export const appRoutes: Route[] = [
   {
     path: 'login',
@@ -17,7 +18,12 @@ export const appRoutes: Route[] = [
     path: 'dashboard',
     component: FeatureOverview,
     canActivate: [authGuard],
-    providers: [provideState(usersFeature), provideEffects(usersEffects)],
+    providers: [
+      provideState(usersFeature),
+      provideEffects(effects),
+      provideState(tasksFeature),
+      provideEffects(taskEffects),
+    ],
   },
   {
     path: '',

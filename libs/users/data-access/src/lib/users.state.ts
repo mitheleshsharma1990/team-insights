@@ -11,7 +11,7 @@ import { User, CreateUserRequest } from '@team-insights/util-interfaces';
 interface UserState {
   users: User[];
   loading: boolean;
-  error: String | null;
+  error: string | null;
 }
 
 const initialState: UserState = {

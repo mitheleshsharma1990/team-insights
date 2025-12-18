@@ -30,7 +30,13 @@
       "@team-insights/ui-charts": ["libs/dashboard/ui-charts/src/index.ts"],
       "@team-insights/util-interfaces": [
         "libs/shared/util-interfaces/src/index.ts"
-      ]
+      ],
+      "@team-insights/tasks-data-access": [
+        "libs/tasks/data-access/src/index.ts"
+      ],
+      "@team-insights/tasks-data-access/effects": [
+        "libs/tasks/data-access/src/lib/tasks.effects.ts"
+      ],
     }
   },
   "exclude": ["node_modules", "tmp"]

@@ -17,7 +17,7 @@ export class TasksService {
         priority: createTaskDto.priority,
       },
     });
-    this.eventsGateway.notifyTaskCreated(task);
+    // this.eventsGateway.notifyTaskCreated(task);
     return task;
   }
 

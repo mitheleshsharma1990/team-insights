@@ -3,11 +3,19 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { UsersActions, usersFeature } from '@team-insights/user-data-access';
-import { SocketService } from '@team-insights/data-access';
-import { HttpClient } from '@angular/common/http';
+// import { SocketService } from '@team-insights/data-access';
+// import { HttpClient } from '@angular/common/http';
 import { DynamicForm, FormFieldConfig } from '@team-insights/dynamic-form';
 import { UiCharts, ChartData } from '@team-insights/ui-charts';
 import { AuthService } from '@team-insights/feature-login';
+import { Actions, ofType } from '@ngrx/effects';
+import {
+  CreateTaskRequest,
+  CreateUserRequest,
+} from '@team-insights/util-interfaces';
+import { tasksFeature, TasksActions } from '@team-insights/tasks-data-access';
+import { map, Observable } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 @Component({
   selector: 'lib-feature-overview',
   standalone: true,
@@ -18,17 +26,24 @@ import { AuthService } from '@team-insights/feature-login';
 export class FeatureOverview {
   private router = inject(Router);
   private store = inject(Store);
-  private socketService = inject(SocketService);
-  private cdr = inject(ChangeDetectorRef);
-  private http = inject(HttpClient);
+  private actions$ = inject(Actions);
+  // private socketService = inject(SocketService);
+  // private cdr = inject(ChangeDetectorRef);
+  // private http = inject(HttpClient);
   private auth = inject(AuthService);
 
   @ViewChild(DynamicForm) dynamicForm!: DynamicForm;
   @ViewChild('barChart') barChart!: UiCharts;
 
-  task: any[] = [];
   showAddUserForm = false;
   currentUser = this.auth.currentUser();
+  tasks$ = this.store.select(tasksFeature.selectTasks);
+  tasksLoading$ = this.store.select(tasksFeature.selectLoading);
+  users$ = this.store.select(usersFeature.selectUsers);
+  loading$ = this.store.select(usersFeature.selectLoading);
+
+  chartData$: Observable<ChartData[]> = new Observable<[]>();
+
   taskFormConfig: FormFieldConfig[] = [
     {
       type: 'text',
@@ -85,57 +100,57 @@ export class FeatureOverview {
     this.showAddUserForm = !this.showAddUserForm;
   }
 
-  chartData: ChartData[] = [];
-
   private updateChart() {
     const counts: Record<string, number> = { High: 0, Medium: 0, Low: 0 };
-    this.task.forEach((t) => {
-      const p = t.priority || 'Low';
-      if (counts[p] !== undefined) {
-        counts[p]++;
-      }
-    });
-    console.log('counts', counts);
+    this.chartData$ = this.tasks$.pipe(
+      map((tasks) => {
+        tasks.forEach((t) => {
+          const p = t.priority || 'Low';
+          if (counts[p] !== undefined) {
+            counts[p]++;
+          }
+        });
+        console.log('counts', counts);
 
-    this.chartData = [
-      { labels: 'High', values: counts['High'] },
-      { labels: 'Medium', values: counts['Medium'] },
-      { labels: 'Low', values: counts['Low'] },
-    ];
+        return [
+          { labels: 'High', values: counts['High'] },
+          { labels: 'Medium', values: counts['Medium'] },
+          { labels: 'Low', values: counts['Low'] },
+        ];
+      })
+    );
     this.barChart.updateChart();
   }
 
-  handleTaskSubmit(formData: any) {
-    console.log('Form submitted', formData);
-
-    this.http.post('api/tasks', formData).subscribe((newTask) => {
-      this.task.push(newTask);
-      this.updateChart();
-      this.cdr.detectChanges();
-      this.dynamicForm.resetForm();
-    });
+  handleTaskSubmit(formData: CreateTaskRequest) {
+    this.store.dispatch(TasksActions.createTask({ task: formData }));
   }
 
-  handleAddUserSubmit(formData: any) {
+  handleAddUserSubmit(formData: CreateUserRequest) {
     this.store.dispatch(UsersActions.createUser({ user: formData }));
     this.showAddUserForm = false;
-    alert('User creation started');
   }
-
-  users$ = this.store.select(usersFeature.selectUsers);
-  loading$ = this.store.select(usersFeature.selectLoading);
 
   ngOnInit() {
     this.store.dispatch(UsersActions.enterDashboard());
-    this.http.get<any[]>('api/tasks').subscribe((data) => {
-      this.task = data;
+    this.store.dispatch(TasksActions.loadTasks());
+    this.tasks$.subscribe(() => {
       this.updateChart();
     });
 
-    this.socketService.onTaskCreated().subscribe((newTask) => {
-      this.task.push(newTask);
-      this.cdr.detectChanges();
-    });
+    // we will use this socket code later to display new task notifications
+    // this.socketService.onTaskCreated().subscribe((newTask) => {
+    //   this.task.push(newTask);
+    //   this.cdr.detectChanges();
+    // });
+    this.actions$
+      .pipe(
+        ofType(TasksActions.createTaskSuccess),
+        takeUntilDestroyed() // Automatically cleans up when component is destroyed
+      )
+      .subscribe(() => {
+        this.dynamicForm.resetForm();
+      });
   }
 
   logout() {

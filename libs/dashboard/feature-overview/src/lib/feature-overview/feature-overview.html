@@ -70,7 +70,7 @@
       <h2 class="text-2xl font-semibold mb-3">Task List</h2>
 
       <ul class="space-y-2">
-        <li *ngFor="let t of task" class="bg-white p-3 rounded-md shadow">
+        <li *ngFor="let t of (tasks$ | async) as tasks" class="bg-white p-3 rounded-md shadow">
           {{ t.title }} - {{ t.priority }} -
           <span [ngClass]="t.isUrgent ? 'text-red-600 font-semibold' : 'text-green-600'">
             {{ t.isUrgent ? 'Urgent' : 'Not Urgent' }}
@@ -96,7 +96,7 @@
 
     <!-- Charts -->
     <div class="bg-white p-6 rounded-lg shadow">
-      <lib-ui-charts #barChart [data]="chartData"></lib-ui-charts>
+      <lib-ui-charts #barChart [data]="(chartData$ | async) ?? []"></lib-ui-charts>
     </div>
 
     <p class="text-gray-500">This is a protected dashboard.</p>

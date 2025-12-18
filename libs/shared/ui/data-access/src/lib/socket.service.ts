@@ -6,17 +6,17 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class SocketService {
-  private socket: Socket;
+  // private socket: Socket;
 
   constructor() {
-    this.socket = io('http://localhost:3000');
+    // this.socket = io('http://localhost:3000');
   }
 
-  onTaskCreated(): Observable<any> {
-    return new Observable((observer) => {
-      this.socket.on('taskCreated', (data) => {
-        observer.next(data);
-      });
-    });
-  }
+  // onTaskCreated(): Observable<any> {
+  //   return new Observable((observer) => {
+  //     this.socket.on('taskCreated', (data) => {
+  //       observer.next(data);
+  //     });
+  //   });
+  // }
 }

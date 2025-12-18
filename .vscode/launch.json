@@ -5,8 +5,8 @@
       "type": "node",
       "request": "launch",
       "name": "Debug workbench-api with Nx",
-      "runtimeExecutable": "pnpm exec",
-      "runtimeArgs": ["nx", "serve", "workbench-api"],
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["exec","nx", "serve", "workbench-api"],
       "env": {
         "NODE_OPTIONS": "--inspect=9229"
       },
@@ -15,7 +15,11 @@
       "skipFiles": ["<node_internals>/**"],
       "sourceMaps": true,
       "outFiles": [
-        "${workspaceFolder}/apps/workbench-api/dist/**/*.(m|c|)js",
+        "${workspaceFolder}/dist/apps/workbench-api/**/*.js", 
+        "!**/node_modules/**"
+      ],
+      "resolveSourceMapLocations": [
+        "${workspaceFolder}/**",
         "!**/node_modules/**"
       ]
     }
